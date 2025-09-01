@@ -1,0 +1,7 @@
+export { FeatureShowcase } from './FeatureShowcase'
+export { Statistics } from './Statistics'
+export { FAQ } from './FAQ'
+export { Newsletter } from './Newsletter'
+export { Footer } from './Footer'
+export { FloatingActionButton } from './FloatingActionButton'
+export { Testimonials } from './Testimonials'
