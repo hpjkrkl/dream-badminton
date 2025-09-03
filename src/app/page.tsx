@@ -1,54 +1,35 @@
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui"
 import { FeatureShowcase, Statistics, FAQ, Newsletter, Footer, FloatingActionButton, Testimonials } from "@/components/feature"
+import { NavBarClerk } from "@/components/NavBar-clerk"
 import { Trophy, Users, Activity, Search, BarChart3, Menu, Play, Download } from "lucide-react"
 import Image from "next/image"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-green-500 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-green-500 dark:from-slate-900 dark:via-slate-800 dark:to-slate-700 relative overflow-hidden transition-colors duration-700">
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-white/5 rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-24 h-24 bg-white/10 rounded-full blur-lg animate-bounce"></div>
-        <div className="absolute bottom-32 left-32 w-40 h-40 bg-white/5 rounded-full blur-2xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-28 h-28 bg-white/5 rounded-full blur-xl"></div>
+        <div className="absolute top-20 left-10 w-32 h-32 bg-white/5 dark:bg-white/3 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-white/10 dark:bg-white/5 rounded-full blur-lg animate-bounce"></div>
+        <div className="absolute bottom-32 left-32 w-40 h-40 bg-white/5 dark:bg-white/3 rounded-full blur-2xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-28 h-28 bg-white/5 dark:bg-white/3 rounded-full blur-xl"></div>
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-50 container mx-auto px-6 py-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/30">
-              <span className="text-white text-xl font-bold">🏸</span>
-            </div>
-            <div className="text-white font-bold text-2xl tracking-tight">Dream Badminton</div>
-          </div>
-          
-          <div className="hidden lg:flex items-center space-x-8 text-white/90">
-            <a href="#" className="hover:text-white transition-all duration-300 font-medium hover:scale-105">Home</a>
-            <a href="#" className="hover:text-white transition-all duration-300 font-medium hover:scale-105">Features</a>
-            <a href="#" className="hover:text-white transition-all duration-300 font-medium hover:scale-105">Screenshots</a>
-            <a href="#" className="hover:text-white transition-all duration-300 font-medium hover:scale-105">Community</a>
-          </div>
-
-          <Button variant="glass-primary" size="sm" className="lg:hidden">
-            <Menu className="w-5 h-5" />
-          </Button>
-        </div>
-      </nav>
+      <NavBarClerk />
 
       {/* Hero Section */}
       <div className="relative z-10 container mx-auto px-6 py-16 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="text-white space-y-8">
+          <div className="text-white dark:text-white space-y-8">
             <div className="space-y-6">
               <h1 className="text-5xl lg:text-6xl xl:text-7xl font-black leading-[0.95] tracking-tight">
-                Draft Your <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">Dream</span> Badminton Team
+                Draft Your <span className="bg-gradient-to-r from-yellow-300 to-orange-300 dark:from-yellow-400 dark:to-orange-400 bg-clip-text text-transparent">Dream</span> Badminton Team
               </h1>
-              <p className="text-2xl lg:text-3xl font-semibold text-white/90 leading-relaxed">
-                Play. <span className="text-yellow-300">Smash.</span> <span className="text-green-300">Win.</span>
+              <p className="text-2xl lg:text-3xl font-semibold text-white/90 dark:text-white/90 leading-relaxed">
+                Play. <span className="text-yellow-300 dark:text-yellow-400">Smash.</span> <span className="text-green-300 dark:text-green-400">Win.</span>
               </p>
-              <p className="text-lg text-white/80 leading-relaxed max-w-md">
+              <p className="text-lg text-white/80 dark:text-white/80 leading-relaxed max-w-md">
                 Build your ultimate badminton squad, compete with friends, and climb the leaderboards in the most exciting fantasy sports experience.
               </p>
             </div>
@@ -90,8 +71,8 @@ export default function Home() {
       {/* Features Grid */}
       <div className="relative z-10 container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">Why Choose Dream Badminton?</h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto">Experience the ultimate fantasy badminton platform with cutting-edge features</p>
+          <h2 className="text-4xl lg:text-5xl font-bold text-white dark:text-white mb-6">Why Choose Dream Badminton?</h2>
+          <p className="text-xl text-white/80 dark:text-white/80 max-w-2xl mx-auto">Experience the ultimate fantasy badminton platform with cutting-edge features</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
@@ -143,8 +124,8 @@ export default function Home() {
 
         {/* App Screenshots */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">Experience the App</h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto">Take a look at our beautifully designed mobile experience</p>
+          <h2 className="text-4xl lg:text-5xl font-bold text-white dark:text-white mb-6">Experience the App</h2>
+          <p className="text-xl text-white/80 dark:text-white/80 max-w-2xl mx-auto">Take a look at our beautifully designed mobile experience</p>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

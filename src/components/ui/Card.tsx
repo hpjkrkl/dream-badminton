@@ -7,12 +7,12 @@ const cardVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-white border-gray-200 shadow-sm hover:shadow-md",
-        glass: "bg-white/5 backdrop-blur-xl border-white/10 shadow-2xl hover:bg-white/10 hover:border-white/20 hover:shadow-3xl",
-        "glass-strong": "bg-white/10 backdrop-blur-2xl border-white/20 shadow-2xl hover:bg-white/15 hover:border-white/30",
-        gradient: "bg-gradient-to-br from-white to-gray-50 border-gray-200 shadow-sm hover:shadow-md",
-        feature: "bg-gradient-to-br from-primary-50 to-secondary-50 border-primary-200/50 shadow-sm hover:shadow-md",
-        mockup: "bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700/50 shadow-2xl overflow-hidden",
+        default: "bg-white dark:bg-card border-gray-200 dark:border-border shadow-sm hover:shadow-md",
+        glass: "bg-white/5 dark:bg-white/5 backdrop-blur-xl border-white/10 dark:border-white/10 shadow-2xl hover:bg-white/10 dark:hover:bg-white/10 hover:border-white/20 dark:hover:border-white/20 hover:shadow-3xl",
+        "glass-strong": "bg-white/10 dark:bg-white/10 backdrop-blur-2xl border-white/20 dark:border-white/20 shadow-2xl hover:bg-white/15 dark:hover:bg-white/15 hover:border-white/30 dark:hover:border-white/30",
+        gradient: "bg-gradient-to-br from-white to-gray-50 dark:from-card dark:to-muted border-gray-200 dark:border-border shadow-sm hover:shadow-md",
+        feature: "bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900/20 dark:to-secondary-900/20 border-primary-200/50 dark:border-primary-800/50 shadow-sm hover:shadow-md",
+        mockup: "bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-950 dark:to-gray-900 border-gray-700/50 dark:border-gray-800/50 shadow-2xl overflow-hidden",
       },
     },
     defaultVariants: {
@@ -69,7 +69,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-gray-600", className)}
+    className={cn("text-sm text-gray-600 dark:text-muted-foreground", className)}
     {...props}
   />
 ))
