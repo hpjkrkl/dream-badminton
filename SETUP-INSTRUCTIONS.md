@@ -53,11 +53,14 @@ CLERK_SECRET_KEY=sk_test_ms1zTOwN6lTiOuzqdpqM0nRYVlJ6CJ0sKCdngsrZDk
 
 ### **Step 4: Database Setup**
 
-Generate the Prisma client:
+Generate the Prisma client and test the shared database connection:
 
 ```bash
 npm run db:generate
+npm run db:test
 ```
+
+> **🗄️ Shared Database**: All developers now use the **same PostgreSQL database** for real-time collaboration! See detailed guide: [SHARED-DATABASE-GUIDE.md](./SHARED-DATABASE-GUIDE.md)
 
 ### **Step 5: Start Development Server**
 
@@ -113,6 +116,7 @@ If you don't see your user account in the Clerk Dashboard:
 ✅ **Authentication**: Sign up/in with Clerk  
 ✅ **Dashboard**: User dashboard with stats cards  
 ✅ **Admin Panel**: Import BWF player data (admin only)  
+✅ **Shared Database**: Real-time data sync across all developers  
 ✅ **Dark/Light Mode**: Toggle themes with smooth animations  
 ✅ **Responsive Design**: Works on desktop and mobile  
 
@@ -123,6 +127,7 @@ npm run dev          # Start development server
 npm run build        # Build for production  
 npm run start        # Start production server
 npm run lint         # Run ESLint
+npm run db:test      # Test shared database connection
 npm run db:generate  # Generate Prisma client
 npm run db:push      # Push schema to database
 npm run db:studio    # Open Prisma Studio
