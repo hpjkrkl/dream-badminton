@@ -93,6 +93,8 @@ model Player {
   fantasySelections TeamPlayer[]
   matchesAsPlayer1 Match[]   @relation("Player1Matches")
   matchesAsPlayer2 Match[]   @relation("Player2Matches")
+  doublesAsPlayer1 DoublesPair[] @relation("Player1Pairs")
+  doublesAsPlayer2 DoublesPair[] @relation("Player2Pairs")
   
   @@index([bwfId])
   @@index([category])
@@ -355,4 +357,44 @@ model News {
   @@index([featured])
   @@index([category])
   @@index([createdAt])
+}
+
+// Doubles Pair Model
+model DoublesPair {
+  id          String    @id @default(cuid())
+  player1Id   String
+  player2Id   String
+  category    PlayerCategory // MD, WD, XD
+  isActive    Boolean   @default(true)
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  player1     Player    @relation("Player1Pairs", fields: [player1Id], references: [id])
+  player2     Player    @relation("Player2Pairs", fields: [player2Id], references: [id])
+  rankings    DoublesRanking[]
+  
+  @@index([category])
+  @@index([isActive])
+  @@unique([player1Id, player2Id, category])
+}
+
+// Doubles Rankings (Historical)
+model DoublesRanking {
+  id               String    @id @default(cuid())
+  pairId           String
+  rank             Int
+  previousRank     Int?
+  rankChange       Int       @default(0)
+  bwfPoints        Int
+  tournamentsPlayed Int
+  fantasyPrice     Float
+  recordedDate     DateTime  @default(now())
+  
+  pair             DoublesPair @relation(fields: [pairId], references: [id], onDelete: Cascade)
+  
+  @@index([pairId])
+  @@index([recordedDate])
+  @@unique([pairId, recordedDate])
 }

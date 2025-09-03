@@ -5,27 +5,39 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { Search, Filter, Edit, Trash2, Eye, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { PlayerCategory } from '@prisma/client';
 
-interface Player {
+interface EnhancedPlayerData {
+  type: 'singles' | 'doubles';
   id: string;
-  bwfId: string;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  country: string;
-  countryCode: string;
   category: PlayerCategory;
-  currentRank: number;
+  rank: number;
   previousRank?: number;
   rankChange: number;
   bwfPoints: number;
   fantasyPrice: number;
-  fantasyPoints: number;
   tournamentsPlayed: number;
+  country: string;
+  countryCode: string;
+  
+  // Singles specific
+  fullName?: string;
+  bwfId?: string;
+  
+  // Doubles specific
+  pairName?: string;
+  player1?: {
+    fullName: string;
+    bwfId: string;
+  };
+  player2?: {
+    fullName: string;
+    bwfId: string;
+  };
 }
 
 export default function AdminPlayersPage() {
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [players, setPlayers] = useState<EnhancedPlayerData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [sortBy, setSortBy] = useState('rank');
@@ -46,11 +58,12 @@ export default function AdminPlayersPage() {
         limit: '100'
       });
 
-      const response = await fetch(`/api/players?${params}`);
+      const response = await fetch(`/api/admin/players/enhanced?${params}`);
       const data = await response.json();
       
       if (data.success) {
         setPlayers(data.data);
+        setStats(data.stats);
       }
     } catch (error) {
       console.error('Error fetching players:', error);
@@ -102,7 +115,7 @@ export default function AdminPlayersPage() {
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-gray-900">Manage Players</h1>
           <div className="text-sm text-gray-600">
-            Total: {players.length} players
+            {stats ? `Total: ${stats.total} (${stats.MS + stats.WS} singles, ${stats.MD + stats.WD + stats.XD} pairs)` : `Total: ${players.length} entries`}
           </div>
         </div>
 
@@ -179,7 +192,7 @@ export default function AdminPlayersPage() {
                         Rank
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Player
+                        Player / Pair
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Country
@@ -207,7 +220,7 @@ export default function AdminPlayersPage() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium text-gray-900">
-                              #{player.currentRank}
+                              #{player.rank}
                             </span>
                             {getRankChangeIcon(player.rankChange)}
                             {player.rankChange !== 0 && (
@@ -219,12 +232,25 @@ export default function AdminPlayersPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div>
-                            <div className="text-sm font-medium text-gray-900">
-                              {player.fullName}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              ID: {player.bwfId}
-                            </div>
+                            {player.type === 'singles' ? (
+                              <>
+                                <div className="text-sm font-medium text-gray-900">
+                                  {player.fullName}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  ID: {player.bwfId}
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <div className="text-sm font-medium text-gray-900">
+                                  {player.pairName}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {player.player1?.bwfId} & {player.player2?.bwfId}
+                                </div>
+                              </>
+                            )}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -234,9 +260,14 @@ export default function AdminPlayersPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryBadgeColor(player.category)}`}>
-                            {player.category}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryBadgeColor(player.category)}`}>
+                              {player.category}
+                            </span>
+                            <span className={`px-1.5 py-0.5 text-xs font-medium rounded ${player.type === 'singles' ? 'bg-gray-100 text-gray-600' : 'bg-blue-100 text-blue-600'}`}>
+                              {player.type === 'singles' ? '1' : '2'}
+                            </span>
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {player.bwfPoints.toLocaleString()}
