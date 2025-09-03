@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Users, Upload, BarChart3, Settings, Shield, Home } from 'lucide-react';
+import { Users, Upload, Settings, Shield, Home, Newspaper } from 'lucide-react';
 
 export default function AdminLayout({
   children,
@@ -10,7 +10,7 @@ export default function AdminLayout({
     { href: '/admin', label: 'Dashboard', icon: Home },
     { href: '/admin/import', label: 'Import Data', icon: Upload },
     { href: '/admin/players', label: 'Manage Players', icon: Users },
-    { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
+    { href: '/admin/news', label: 'Manage News', icon: Newspaper },
     { href: '/admin/settings', label: 'Settings', icon: Settings },
   ];
 

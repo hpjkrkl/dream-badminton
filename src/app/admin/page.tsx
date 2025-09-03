@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
-import { Users, Trophy, Activity, DollarSign, Upload, Eye } from 'lucide-react';
+import { Users, Trophy, Activity, DollarSign, Upload, Eye, TrendingUp, Newspaper } from 'lucide-react';
 import Link from 'next/link';
 
 interface DashboardStats {
@@ -13,9 +13,21 @@ interface DashboardStats {
   categoryBreakdown: Record<string, number>;
 }
 
+interface NewsItem {
+  id: string;
+  title: string;
+  category: string;
+  content: string;
+  date: string;
+  author: string;
+  featured: boolean;
+  tags: string[];
+}
+
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
 
   useEffect(() => {
     // In a real app, you'd fetch this from an API
@@ -36,6 +48,34 @@ export default function AdminDashboardPage() {
       });
       setLoading(false);
     }, 1000);
+    
+    // Load saved news from localStorage
+    const savedNews = localStorage.getItem('badmintonNews');
+    if (savedNews) {
+      try {
+        const parsedNews = JSON.parse(savedNews);
+        setNewsItems(parsedNews);
+      } catch (e) {
+        console.error('Failed to parse saved news', e);
+      }
+    }
+  }, []);
+
+  // Also listen for changes to news items
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'badmintonNews') {
+        try {
+          const parsedNews = JSON.parse(e.newValue || '[]');
+          setNewsItems(parsedNews);
+        } catch (e) {
+          console.error('Failed to parse saved news', e);
+        }
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const quickActions = [
@@ -54,18 +94,18 @@ export default function AdminDashboardPage() {
       color: 'bg-green-500 hover:bg-green-600'
     },
     {
+      title: 'Manage News',
+      description: 'View and manage published news',
+      href: '/admin/news',
+      icon: Newspaper,
+      color: 'bg-indigo-500 hover:bg-indigo-600'
+    },
+    {
       title: 'User Management',
       description: 'Debug users and authentication',
       href: '/admin/users',
       icon: Eye,
       color: 'bg-purple-500 hover:bg-purple-600'
-    },
-    {
-      title: 'View App',
-      description: 'See the public app',
-      href: '/',
-      icon: Activity,
-      color: 'bg-orange-500 hover:bg-orange-600'
     }
   ];
 
@@ -199,6 +239,67 @@ export default function AdminDashboardPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Recent News */}
+        {newsItems.length > 0 && (
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="flex items-center">
+                <TrendingUp className="w-5 h-5 mr-2 text-green-600" />
+                Recent News
+              </CardTitle>
+              <Link 
+                href="/admin/analytics" 
+                className="text-sm text-green-600 hover:text-green-800 font-medium"
+              >
+                View All →
+              </Link>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {newsItems.slice(0, 3).map((item) => (
+                  <div key={item.id} className="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
+                    <div className="flex justify-between">
+                      <h3 className="font-medium text-gray-900">{item.title}</h3>
+                      {item.featured && (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          Featured
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center mt-1 text-sm text-gray-500">
+                      <span>{item.category}</span>
+                      <span className="mx-2">•</span>
+                      <span>{new Date(item.date).toLocaleDateString()}</span>
+                      <span className="mx-2">•</span>
+                      <span>By {item.author}</span>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+                      {item.content}
+                    </p>
+                    {item.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {item.tags.slice(0, 3).map((tag) => (
+                          <span 
+                            key={tag} 
+                            className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                        {item.tags.length > 3 && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            +{item.tags.length - 3} more
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Category Breakdown */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
