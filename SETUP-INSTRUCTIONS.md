@@ -88,10 +88,19 @@ Navigate to **http://localhost:3000** and you should see the Dream Badminton lan
 ### **Admin Access (Optional)**
 To test admin features:
 1. Go to [Clerk Dashboard](https://dashboard.clerk.com)
-2. Sign in with Google (use the development credentials)
-3. Navigate to **Users** → Find your account
-4. Add to **Public metadata**: `{"role": "admin"}`
-5. Refresh the app - you should see "Admin Panel" button
+2. Sign in to access the dashboard
+3. Find the **"Dream Badminton"** application (or check the publishable key starts with `pk_test_Y3V0ZS1yYXR0bGVyLTM...`)
+4. Navigate to **Users** → Find your account
+5. Click on your user → Go to **Public metadata**
+6. Add: `{"role": "admin"}`
+7. Save and refresh the app - you should see "Admin Panel" button
+
+### **Clerk Dashboard Troubleshooting**
+If you don't see your user account in the Clerk Dashboard:
+- **Check you're in the right application** (look for "Dream Badminton")
+- **Refresh the dashboard** - sometimes there's a sync delay
+- **Verify development environment** - make sure you're not in Production mode
+- **See detailed guide**: [CLERK-TROUBLESHOOTING.md](./CLERK-TROUBLESHOOTING.md)
 
 ### **Dark/Light Mode**
 - Look for the sun/moon toggle in the navigation
@@ -147,6 +156,32 @@ npm run db:studio    # Open Prisma Studio
 
 ## 🐛 **Troubleshooting**
 
+### **npm Permission Errors (macOS)**
+If you get `EACCES` or `EEXIST` errors during `npm install`:
+```bash
+# Option 1: Clear npm cache
+npm cache clean --force
+npm install
+
+# Option 2: Fix permissions
+sudo chown -R $(whoami) ~/.npm
+npm install
+
+# Option 3: Use yarn instead
+npm install -g yarn
+yarn install
+yarn dev
+```
+
+### **Console Warnings (SAFE TO IGNORE)**
+These messages are **normal** in development:
+```
+✅ Download the React DevTools... (helpful suggestion)
+✅ Clerk: Clerk has been loaded with development keys (expected)
+✅ [Fast Refresh] rebuilding (hot reload working)
+❌ Access to fetch at 'clerk-telemetry.com' CORS error (harmless analytics)
+```
+
 ### **Port Already in Use**
 If port 3000 is busy, the app will automatically use 3001, 3002, etc.
 
@@ -165,6 +200,9 @@ Delete node_modules and reinstall:
 rm -rf node_modules package-lock.json
 npm install
 ```
+
+### **User Not Showing in Clerk Dashboard**
+See detailed troubleshooting guide: [CLERK-TROUBLESHOOTING.md](./CLERK-TROUBLESHOOTING.md)
 
 ## 📱 **Mobile Testing**
 

@@ -54,17 +54,17 @@ export default function AdminDashboardPage() {
       color: 'bg-green-500 hover:bg-green-600'
     },
     {
-      title: 'View Analytics',
-      description: 'System performance and usage',
-      href: '/admin/analytics',
-      icon: Activity,
+      title: 'User Management',
+      description: 'Debug users and authentication',
+      href: '/admin/users',
+      icon: Eye,
       color: 'bg-purple-500 hover:bg-purple-600'
     },
     {
       title: 'View App',
       description: 'See the public app',
       href: '/',
-      icon: Eye,
+      icon: Activity,
       color: 'bg-orange-500 hover:bg-orange-600'
     }
   ];
