@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from 'next-themes';
 import { useState } from 'react';
+import { CLERK_CONFIG } from '@/config/clerk';
 
 export function ProvidersClerk({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient({
@@ -19,7 +20,12 @@ export function ProvidersClerk({ children }: { children: React.ReactNode }) {
   }));
 
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      publishableKey={CLERK_CONFIG.publishableKey}
+      afterSignInUrl={CLERK_CONFIG.afterSignInUrl}
+      afterSignUpUrl={CLERK_CONFIG.afterSignUpUrl}
+      afterSignOutUrl={CLERK_CONFIG.afterSignOutUrl}
+    >
       <QueryClientProvider client={queryClient}>
         <ThemeProvider
           attribute="class"

@@ -41,15 +41,15 @@ cp .env.example .env
 
 **The `.env` file should contain:**
 ```env
-# Database (Already configured - uses shared development database)
+# Database (Shared development database - all developers use this)
 DATABASE_URL="postgres://9607f0c924b30f70cae243484f1c4e8013edee12dd36cdb836e4a54de80701bf:sk_LwltxLG8B3rjz1yPyJlMX@db.prisma.io:5432/postgres?sslmode=require"
 
-# Clerk Authentication (Already configured - uses shared development keys)
+# Clerk Authentication (For server-side middleware only)  
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_Y3V0ZS1yYXR0bGVyLTMuY2xlcmsuYWNjb3VudHMuZGV2JA
 CLERK_SECRET_KEY=sk_test_ms1zTOwN6lTiOuzqdpqM0nRYVlJ6CJ0sKCdngsrZDk
 ```
 
-> **Note**: These are development credentials shared for testing. They're safe to use locally.
+> **✅ Keys Embedded**: Clerk keys are now **embedded directly in the code** (`src/config/clerk.ts`) to ensure ALL developers automatically use the same Clerk application. No configuration confusion!
 
 ### **Step 4: Database Setup**
 
