@@ -15,66 +15,71 @@ interface NewsItem {
   author: string;
   featured: boolean;
   tags: string[];
+  imageUrl?: string | null;
 }
 
 export default function NewsManagementPage() {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Load saved news from localStorage on component mount
+  // Load news from database
   useEffect(() => {
-    const loadNews = () => {
-      const savedNews = localStorage.getItem('badmintonNews');
-      if (savedNews) {
-        try {
-          const parsedNews = JSON.parse(savedNews);
-          setNewsItems(parsedNews);
-        } catch (e) {
-          console.error('Failed to parse saved news', e);
+    const loadNews = async () => {
+      try {
+        const response = await fetch('/api/news');
+        if (response.ok) {
+          const data = await response.json();
+          setNewsItems(data);
+        } else {
+          console.error('Failed to fetch news');
         }
+      } catch (error) {
+        console.error('Error loading news:', error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     loadNews();
     
-    // Listen for storage changes
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'badmintonNews') {
-        try {
-          const parsedNews = JSON.parse(e.newValue || '[]');
-          setNewsItems(parsedNews);
-        } catch (e) {
-          console.error('Failed to parse saved news', e);
-        }
-      }
-    };
+    // Poll for updates every 5 seconds to sync between machines
+    const interval = setInterval(loadNews, 5000);
     
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    return () => clearInterval(interval);
   }, []);
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this news item?')) {
-      const updatedNews = newsItems.filter(item => item.id !== id);
-      setNewsItems(updatedNews);
-      localStorage.setItem('badmintonNews', JSON.stringify(updatedNews));
-      
-      // Also update the global variable
-      if (typeof window !== 'undefined') {
-        window.badmintonNews = updatedNews;
+      try {
+        const response = await fetch(`/api/news/${id}`, {
+          method: 'DELETE',
+        });
+        
+        if (response.ok) {
+          setNewsItems(prev => prev.filter(item => item.id !== id));
+        } else {
+          console.error('Failed to delete news item');
+        }
+      } catch (error) {
+        console.error('Error deleting news:', error);
       }
     }
   };
 
-  const handleDeleteAll = () => {
+  const handleDeleteAll = async () => {
     if (confirm('Are you sure you want to delete all news items? This cannot be undone.')) {
-      setNewsItems([]);
-      localStorage.removeItem('badmintonNews');
-      
-      // Also update the global variable
-      if (typeof window !== 'undefined') {
-        window.badmintonNews = [];
+      try {
+        const response = await fetch('/api/news', {
+          method: 'DELETE',
+        });
+        
+        if (response.ok) {
+          setNewsItems([]);
+        } else {
+          console.error('Failed to delete all news');
+        }
+      } catch (error) {
+        console.error('Error deleting all news:', error);
       }
     }
   };

@@ -23,23 +23,19 @@ export default function NewsViewPage({ params }: { params: { id: string } }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadNewsItem = () => {
+    const loadNewsItem = async () => {
       try {
-        const savedNews = localStorage.getItem('badmintonNews');
-        if (savedNews) {
-          const parsedNews = JSON.parse(savedNews);
-          // Use params.id directly as it's already unwrapped by Next.js
-          const item = parsedNews.find((news: NewsItem) => news.id === params.id);
-          if (item) {
-            setNewsItem(item);
-          } else {
-            setError('News item not found');
-          }
+        const response = await fetch(`/api/news/${params.id}`);
+        if (response.ok) {
+          const item = await response.json();
+          setNewsItem(item);
+        } else if (response.status === 404) {
+          setError('News item not found');
         } else {
-          setError('No news items found');
+          setError('Failed to load news item');
         }
       } catch (e) {
-        console.error('Failed to parse saved news', e);
+        console.error('Failed to load news', e);
         setError('Failed to load news item');
       } finally {
         setLoading(false);

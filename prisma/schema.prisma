@@ -336,3 +336,23 @@ enum NotificationType {
   TOURNAMENT_REMINDER
   SYSTEM
 }
+
+// News Model
+model News {
+  id          String    @id @default(cuid())
+  title       String
+  category    String
+  content     String    @db.Text
+  date        DateTime  @default(now())
+  author      String
+  featured    Boolean   @default(false)
+  tags        String[]
+  imageUrl    String?
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@index([featured])
+  @@index([category])
+  @@index([createdAt])
+}

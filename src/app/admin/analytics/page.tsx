@@ -33,19 +33,25 @@ export default function AnalyticsPage() {
   ]);
   const [newTag, setNewTag] = useState('');
 
-  // Load saved news from localStorage on component mount
+  // Load saved news from database on component mount
   useEffect(() => {
-    const savedNews = localStorage.getItem('badmintonNews');
-    if (savedNews) {
+    const loadNews = async () => {
       try {
-        const parsedNews = JSON.parse(savedNews);
-        if (parsedNews.length > 0) {
-          setNewsItems(parsedNews);
+        const response = await fetch('/api/news');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.length > 0) {
+            // Don't load existing news for editing in the create form
+            // This page is for creating new news, not editing existing ones
+            // Existing news can be edited from the news management page
+          }
         }
-      } catch (e) {
-        console.error('Failed to parse saved news', e);
+      } catch (error) {
+        console.error('Error loading news:', error);
       }
-    }
+    };
+    
+    loadNews();
   }, []);
 
   const addNewsItem = () => {
@@ -109,20 +115,28 @@ export default function AnalyticsPage() {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Filter out empty news items
     const validNewsItems = newsItems.filter(item => item.title.trim() !== '' || item.content.trim() !== '');
     
-    // Save to localStorage
-    localStorage.setItem('badmintonNews', JSON.stringify(validNewsItems));
-    
-    // Also save to a global variable that can be accessed by other components
-    if (typeof window !== 'undefined') {
-      window.badmintonNews = validNewsItems;
+    try {
+      // Save each news item to the database
+      for (const item of validNewsItems) {
+        await fetch('/api/news', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(item),
+        });
+      }
+      
+      console.log('Saving news items:', validNewsItems);
+      alert('News items saved successfully to database!');
+    } catch (error) {
+      console.error('Failed to save news:', error);
+      alert('Failed to save news items. Please try again.');
     }
-    
-    console.log('Saving news items:', validNewsItems);
-    alert('News items saved successfully!');
   };
 
   const categories = [
